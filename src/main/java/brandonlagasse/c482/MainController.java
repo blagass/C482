@@ -1,5 +1,7 @@
 package brandonlagasse.c482;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,11 +11,18 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.security.PrivateKey;
 import java.util.ResourceBundle;
+
+import static brandonlagasse.c482.Inventory.allParts;
+import static brandonlagasse.c482.Inventory.allProducts;
+
 
 public class MainController implements Initializable{
 
@@ -26,13 +35,20 @@ public class MainController implements Initializable{
     public TableView<Part> partTable;
     public TableColumn partId;
     public TableColumn partName;
-    public TableColumn partInventoryLevel;
-    public TableColumn partCostPerUnit;
-    public TableView productTable;
+    public TableColumn partStock;
+    public TableColumn partCost;
+    public TableView<Product> productTable;
     public TableColumn productId;
     public TableColumn productName;
-    public TableColumn productInventoryLevel;
-    public TableColumn productCostPerUnit;
+    public TableColumn productStock;
+    public TableColumn productCost;
+    public TextField partQuery;
+    public TextField productQuery;
+
+    public void getResults(ActionEvent actionEvent){
+    String query = partQuery.getText();
+
+    };
 
     public void toAddPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("add-part.fxml"));
@@ -78,26 +94,56 @@ public class MainController implements Initializable{
     }
 
     private void addTestData() {
-        InHouse I1 = new InHouse(10, "cool part", 10.00, 10, 1,20,101);
-        Inventory.addPart(I1);
-        InHouse I2 = new InHouse(9, "lame part", 1.00, 6, 1,20,102);
-        Inventory.addPart(I2);
-        InHouse I3 = new InHouse(8, "meh part", 5.00, 40, 1,20,103);
-        Inventory.addPart(I3);
-        OutSourced O1 = new OutSourced(7, "cool part", 10.00, 10, 1,20,"Joes");
-        Inventory.addPart(O1);
-        OutSourced O2 = new OutSourced(6, "lame part", 1.00, 6, 1,20,"Franks");
-        Inventory.addPart(O2);
-        OutSourced O3 = new OutSourced(5, "meh part", 5.00, 40, 1,20,"Ritas");
-        Inventory.addPart(O3);
-    }
+        InHouse cool_part = new InHouse(10, "cool part", 10.00, 10, 1,20,101);
+        Inventory.addPart(cool_part);
+        OutSourced rad_part = new OutSourced(7, "rad part", 10.00, 10, 1,20,"Joes");
+        Inventory.addPart(rad_part);
 
+
+        Product nice_product= new Product(200,"nice product",400,20,1,40);
+        Inventory.addProduct(nice_product);
+        Product groovy_product = new Product(400,"groovy product",700,20,1,50);
+        Inventory.addProduct(nice_product);
+
+    }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         addTestData();
 
-    }
 
+        partId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partCost.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        productId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productCost.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        partTable.setItems(allParts);
+        productTable.setItems(allProducts);
+
+    }
+    // Search Parts by Name
+    private ObservableList<Part>searchByPartName(String partialName){
+
+        //This is the collection for the result of the search
+        ObservableList<Part>partNames = FXCollections.observableArrayList();
+
+        //This list returns all parts in the inventory
+        ObservableList<Part>allParts = Inventory.getAllParts();
+
+        for(Part part : allParts){
+            if(part.getName().contains(partialName)){
+                partNames.add(part);
+            };
+        }
+
+        return partNames;
+
+
+    };
 }

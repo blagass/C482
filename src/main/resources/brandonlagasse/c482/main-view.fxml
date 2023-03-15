@@ -21,7 +21,7 @@
                <StackPane.margin>
                   <Insets left="20.0" />
                </StackPane.margin></Label>
-            <TextField StackPane.alignment="CENTER">
+            <TextField fx:id="partQuery" StackPane.alignment="CENTER">
                <StackPane.margin>
                   <Insets left="200.0" right="20.0" />
                </StackPane.margin></TextField>
@@ -33,8 +33,8 @@
               <columns>
                 <TableColumn fx:id="partId" prefWidth="75.0" text="Part ID" />
                 <TableColumn fx:id="partName" prefWidth="75.0" text="Part Name" />
-                  <TableColumn fx:id="partInventoryLevel" prefWidth="115.0" text="Inventory Level" />
-                  <TableColumn fx:id="partCostPerUnit" prefWidth="134.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="partStock" prefWidth="115.0" text="Inventory Level" />
+                  <TableColumn fx:id="partCost" prefWidth="134.0" text="Price/Cost per Unit" />
               </columns>
             </TableView>
          </children>
@@ -60,7 +60,7 @@
                <StackPane.margin>
                   <Insets left="20.0" />
                </StackPane.margin></Label>
-            <TextField StackPane.alignment="CENTER_RIGHT">
+            <TextField fx:id="productQuery" StackPane.alignment="CENTER_RIGHT">
                <StackPane.margin>
                   <Insets left="200.0" right="20.0" />
                </StackPane.margin>
@@ -73,8 +73,8 @@
                <columns>
                   <TableColumn fx:id="productId" prefWidth="75.0" text="Product ID" />
                   <TableColumn fx:id="productName" prefWidth="98.0" text="Product Name" />
-                  <TableColumn fx:id="productInventoryLevel" prefWidth="101.0" text="Inventory Level" />
-                  <TableColumn fx:id="productCostPerUnit" prefWidth="125.0" text="Price/Cost per Unit" />
+                  <TableColumn fx:id="productStock" prefWidth="101.0" text="Inventory Level" />
+                  <TableColumn fx:id="productCost" prefWidth="125.0" text="Price/Cost per Unit" />
                </columns>
             </TableView>
          </children>

@@ -4,8 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Inventory {
-  private static ObservableList<Part> allParts = FXCollections.observableArrayList();
-  private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
+  static ObservableList<Part> allParts = FXCollections.observableArrayList();
+  static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
   // Add parts/products //
   public static void addPart(Part newPart){
