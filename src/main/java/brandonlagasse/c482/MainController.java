@@ -124,6 +124,8 @@ public class MainController implements Initializable{
 
     }
 
+    //////// PART SEARCH ////////
+
     // Results handler for Parts search field
     public void getPartResults(ActionEvent actionEvent){
 
@@ -180,5 +182,61 @@ public class MainController implements Initializable{
         }
 
         return null;
+    };
+
+
+    ////////   PRODUCT SEARCH   ////////
+
+    //Results handler for the product search field
+    public void getProductResults(ActionEvent actionEvent) {
+        //Receive user input
+        String query = productQuery.getText();
+
+        //Add query results to a list of products
+        ObservableList<Product>products = searchByProductName(query);
+
+
+        //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
+        if(products.size() == 0){
+            int id = Integer.parseInt(query);
+            Product product = searchByProductId(id);
+            if (product != null)
+                products.add(product);
+        }
+
+        //Finally, add the parts list to the products table.
+        productTable.setItems(products);
+    }
+
+    //Search by Product id
+    private Product searchByProductId(int id) {
+        ObservableList<Product>allProducts = Inventory.getAllProducts();
+
+        //For each part in our products list, return the id if there is a match, else return null.
+        for (Product product : allProducts) {
+            if (product.getId() == id) {
+                return product;
+            }
+        }
+
+        return null;
+    }
+
+    //Search by Product name
+    private ObservableList<Product> searchByProductName(String partialName) {
+        //This is the collection for the result of the search
+        ObservableList<Product>productNames = FXCollections.observableArrayList();
+
+        //This list returns all parts in the inventory
+        ObservableList<Product>allProducts = Inventory.getAllProducts();
+
+        for(Product product : allProducts){
+            if(product.getName().contains(partialName)){
+                productNames.add(product);
+            };
+        }
+
+        return productNames;
+
     };
 }
