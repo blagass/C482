@@ -59,10 +59,10 @@ public class Inventory {
   // Get all parts/products //
 
   public static ObservableList<Part> getAllParts() {
-      return null;
+      return allParts;
   }
 
   public static ObservableList<Product> getAllProducts() {
-      return null;
+      return allProducts;
   }
 }

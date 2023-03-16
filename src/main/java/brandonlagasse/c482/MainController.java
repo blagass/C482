@@ -45,10 +45,6 @@ public class MainController implements Initializable{
     public TextField partQuery;
     public TextField productQuery;
 
-    public void getResults(ActionEvent actionEvent){
-    String query = partQuery.getText();
-
-    };
 
     public void toAddPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("add-part.fxml"));
@@ -127,7 +123,32 @@ public class MainController implements Initializable{
         productTable.setItems(allProducts);
 
     }
-    // Search Parts by Name
+
+    // Results handler for Parts search field
+    public void getPartResults(ActionEvent actionEvent){
+
+        //Receive user input
+        String query = partQuery.getText();
+
+        //Add query results to a list of parts
+        ObservableList<Part>parts = searchByPartName(query);
+
+
+        //Instead, if an Id is used and the parts list is > 0, search by id and add to parts list.
+        if(parts.size() == 0){
+            int id = Integer.parseInt(query);
+            Part part = searchByPartId(id);
+            if (part != null)
+                parts.add(part);
+        }
+
+        //Finally, add the parts list to the parts table.
+        partTable.setItems(parts);
+
+    };
+
+
+    // Search by Part name
     private ObservableList<Part>searchByPartName(String partialName){
 
         //This is the collection for the result of the search
@@ -145,5 +166,19 @@ public class MainController implements Initializable{
         return partNames;
 
 
+    };
+
+    //Search by Part ID
+    private Part searchByPartId (int id){
+        ObservableList<Part>allParts = Inventory.getAllParts();
+
+        //For each part in our parts list, return the id if there is a match, else return null.
+        for (Part part : allParts) {
+            if (part.getId() == id) {
+                return part;
+            }
+        }
+
+        return null;
     };
 }
