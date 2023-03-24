@@ -47,7 +47,6 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <Label text="ID">
@@ -70,25 +69,20 @@
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
-                  <Label text="Max" GridPane.rowIndex="5">
+                  <Label fx:id="machLabel" text="Machine ID" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
-                  <Label text="Machine ID" GridPane.rowIndex="6">
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin></Label>
-                  <TextField GridPane.columnIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="modifyPartId" GridPane.columnIndex="1" />
+                  <TextField fx:id="modifyPartName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="modifyPartStock" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="modifyPartCost" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="modifyPartMax" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="modifyMachComp" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Pane prefHeight="26.0" prefWidth="57.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <children>
                         <Label layoutX="12.0" layoutY="5.0" text="Min" />
-                        <TextField layoutX="51.0" layoutY="-1.0" />
+                        <TextField fx:id="modifyPartMin" layoutX="51.0" layoutY="-1.0" />
                      </children>
                   </Pane>
                </children>

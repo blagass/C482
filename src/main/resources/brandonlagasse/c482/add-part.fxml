@@ -13,9 +13,9 @@
                <children>
                   <Pane prefHeight="76.0" prefWidth="145.0">
                      <children>
-                        <Label alignment="CENTER_RIGHT" layoutX="84.0" layoutY="30.0" text="Add Part">
+                        <Label alignment="CENTER_RIGHT" layoutX="73.0" layoutY="29.0" text="Add Part">
                            <font>
-                              <Font name="System Bold" size="12.0" />
+                              <Font name="System Bold" size="16.0" />
                            </font></Label>
                      </children>
                   </Pane>
@@ -23,12 +23,15 @@
                      <children>
                         <Pane prefHeight="76.0" prefWidth="100.0">
                            <children>
-                              <RadioButton layoutX="14.0" layoutY="30.0" mnemonicParsing="false" text="In-House" />
+                              <RadioButton fx:id="inHouseRadio" layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#onInHouseRadio" text="In-House">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="addPartToggle" />
+                                 </toggleGroup></RadioButton>
                            </children>
                         </Pane>
                         <Pane layoutX="10.0" layoutY="10.0" prefHeight="76.0" prefWidth="252.0">
                            <children>
-                              <RadioButton layoutX="14.0" layoutY="30.0" mnemonicParsing="false" text="Outsourced" />
+                              <RadioButton fx:id="outsourcedRadio" layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#onOutsourcedRadio" text="Outsourced" toggleGroup="$addPartToggle" />
                            </children>
                         </Pane>
                      </children></HBox>
@@ -36,15 +39,14 @@
             </HBox>
             <GridPane prefHeight="180.0" prefWidth="800.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="395.0" minWidth="10.0" prefWidth="167.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" prefWidth="238.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" prefWidth="637.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="395.0" minWidth="10.0" prefWidth="141.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" prefWidth="106.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="678.0" minWidth="10.0" prefWidth="562.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -70,32 +72,27 @@
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
-                  <Label text="Max" GridPane.rowIndex="5">
+                  <Label fx:id="machCoLabel" text="Machine ID" GridPane.rowIndex="5">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
-                  <Label text="Machine ID" GridPane.rowIndex="6">
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin></Label>
-                  <TextField GridPane.columnIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="partIdField" GridPane.columnIndex="1" />
+                  <TextField fx:id="partNameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="partStockField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="partCostField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="partMaxField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="partMachineCompanyField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <Pane prefHeight="26.0" prefWidth="57.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <children>
                         <Label layoutX="12.0" layoutY="5.0" text="Min" />
-                        <TextField layoutX="51.0" layoutY="-1.0" />
+                        <TextField fx:id="partMinField" layoutX="51.0" layoutY="-1.0" />
                      </children>
                   </Pane>
                </children>
             </GridPane>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane fx:id="partId" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <Button layoutX="255.0" layoutY="14.0" mnemonicParsing="false" text="Save" />
+                  <Button fx:id="savePartButton" layoutX="255.0" layoutY="14.0" mnemonicParsing="false" onAction="#partSave" text="Save" />
                   <Button fx:id="cancelAddPart" layoutX="319.0" layoutY="14.0" mnemonicParsing="false" onAction="#toMainScreen" text="Cancel" />
                </children></Pane>
          </children>

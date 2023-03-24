@@ -76,6 +76,11 @@ public class MainController implements Initializable{
 
     public void toModifyPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("modify-part.fxml"));
+
+        //Get selected item in the table, and send it to passPart method in ModifyPart controller.
+       // ModifyPart.passPart(partTable.getSelectionModel().getSelectedItem());
+
+
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
         stage.setTitle("Add Part");
