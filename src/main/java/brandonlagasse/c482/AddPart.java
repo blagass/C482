@@ -48,10 +48,7 @@ public class AddPart implements Initializable {
         String costStr = partCostField.getText();
         String maxStr = partMaxField.getText();
         String minStr = partMinField.getText();
-        String machineIdStr = partMachineCompanyField.getText(); // COME BACK TO THIS FOR RADIO
-
-        // Test the output
-        System.out.println(idStr +" "+ nameStr +" "+ stockStr +" "+ costStr +" "+ maxStr +" "+ minStr +" "+ machineIdStr);
+        String machineIdStr = partMachineCompanyField.getText();
 
         //Convert strings to integers
         int id = Integer.parseInt(idStr);
