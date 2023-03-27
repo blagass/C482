@@ -58,14 +58,14 @@
                                  <GridPane.margin>
                                     <Insets right="10.0" />
                                  </GridPane.margin></Label>
-                              <TextField GridPane.columnIndex="1" />
-                              <TextField minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <TextField fx:id="productIdField" editable="false" promptText="Auto Gen Disabled" GridPane.columnIndex="1" />
+                              <TextField fx:id="productNameField" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />
                                  </GridPane.margin></TextField>
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <TextField GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="productStockField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="productPriceField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField fx:id="productMaxField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                                  <children>
                                     <StackPane prefHeight="150.0" prefWidth="200.0">
@@ -75,7 +75,7 @@
                                     </StackPane>
                                     <StackPane prefHeight="150.0" prefWidth="200.0">
                                        <children>
-                                          <TextField />
+                                          <TextField fx:id="productMinField" />
                                        </children>
                                     </StackPane>
                                  </children>
@@ -93,7 +93,7 @@
                            <children>
                               <StackPane prefHeight="91.0" prefWidth="315.0">
                                  <children>
-                                    <TextField prefWidth="206.0" promptText="Search by Part ID or Name">
+                                    <TextField fx:id="addProductSearch" prefWidth="206.0" promptText="Search by Part ID or Name">
                                        <StackPane.margin>
                                           <Insets left="120.0" right="20.0" />
                                        </StackPane.margin>
@@ -102,19 +102,19 @@
                               </StackPane>
                               <StackPane prefHeight="192.0" prefWidth="315.0">
                                  <children>
-                                    <TableView prefHeight="200.0" prefWidth="315.0">
+                                    <TableView fx:id="partInventoryTable" prefHeight="200.0" prefWidth="315.0">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="Part ID" />
-                                        <TableColumn prefWidth="75.0" text="Part Name" />
-                                          <TableColumn prefWidth="103.0" text="Inventory Level" />
-                                          <TableColumn prefWidth="135.0" text="Price/Cost per Unit" />
+                                        <TableColumn fx:id="invPartIdCol" prefWidth="75.0" text="Part ID" />
+                                        <TableColumn fx:id="invPartNameCol" prefWidth="75.0" text="Part Name" />
+                                          <TableColumn fx:id="invStockCol" prefWidth="103.0" text="Inventory Level" />
+                                          <TableColumn fx:id="invCostCol" prefWidth="135.0" text="Price/Cost per Unit" />
                                       </columns>
                                     </TableView>
                                  </children>
                               </StackPane>
                               <StackPane prefHeight="70.0" prefWidth="315.0">
                                  <children>
-                                    <Button mnemonicParsing="false" text="Add" StackPane.alignment="CENTER_RIGHT">
+                                    <Button fx:id="addPartButton" mnemonicParsing="false" onAction="#onAddPartButton" text="Add" StackPane.alignment="CENTER_RIGHT">
                                        <StackPane.margin>
                                           <Insets right="40.0" />
                                        </StackPane.margin>
@@ -129,29 +129,29 @@
                            <children>
                               <StackPane prefHeight="283.0" prefWidth="315.0">
                                  <children>
-                                    <TableView prefHeight="200.0" prefWidth="315.0">
+                                    <TableView fx:id="productFinalTable" prefHeight="200.0" prefWidth="315.0">
                                       <columns>
-                                        <TableColumn prefWidth="75.0" text="Part ID" />
-                                        <TableColumn prefWidth="75.0" text="Part Name" />
-                                          <TableColumn prefWidth="109.0" text="Inventory Level" />
-                                          <TableColumn prefWidth="129.0" text="Price/Cost per Unit" />
+                                        <TableColumn fx:id="finalPartIdCol" prefWidth="75.0" text="Part ID" />
+                                        <TableColumn fx:id="finalPartNameCol" prefWidth="75.0" text="Part Name" />
+                                          <TableColumn fx:id="finalPartStockCol" prefWidth="109.0" text="Inventory Level" />
+                                          <TableColumn fx:id="finalCostCol" prefWidth="129.0" text="Price/Cost per Unit" />
                                       </columns>
                                     </TableView>
                                  </children>
                               </StackPane>
                               <StackPane prefHeight="224.0" prefWidth="315.0">
                                  <children>
-                                    <Button minWidth="150.0" mnemonicParsing="false" text="Remove Associated Part" StackPane.alignment="TOP_RIGHT">
+                                    <Button fx:id="removePartButton" minWidth="150.0" mnemonicParsing="false" onAction="#onRemovePartButton" text="Remove Associated Part" StackPane.alignment="TOP_RIGHT">
                                        <StackPane.margin>
                                           <Insets right="20.0" top="10.0" />
                                        </StackPane.margin>
                                     </Button>
-                                    <Button fx:id="cancelAddProduct" mnemonicParsing="false" onAction="#cancelAddProduct" text="Cancel" StackPane.alignment="CENTER_RIGHT">
+                                    <Button fx:id="cancelAddButton" mnemonicParsing="false" onAction="#onCancelAddButton" text="Cancel" StackPane.alignment="CENTER_RIGHT">
                                        <StackPane.margin>
                                           <Insets right="20.0" />
                                        </StackPane.margin>
                                     </Button>
-                                    <Button mnemonicParsing="false" text="Save" StackPane.alignment="CENTER">
+                                    <Button fx:id="saveProductButton" mnemonicParsing="false" onAction="#onSaveProductButton" text="Save" StackPane.alignment="CENTER">
                                        <StackPane.margin>
                                           <Insets left="180.0" />
                                        </StackPane.margin>
