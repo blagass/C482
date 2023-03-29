@@ -26,7 +26,6 @@ public class AddProduct implements Initializable {
     public Part transferPart = null;
     ObservableList<Part> finalPartList = FXCollections.observableArrayList();
 
-    public Button cancelAddProduct;
     public TextField productIdField;
     public TextField productNameField;
     public TextField productStockField;
@@ -49,19 +48,13 @@ public class AddProduct implements Initializable {
     public Button cancelAddButton;
     public Button saveProductButton;
 
-    //I decided to make this dope
-    public void cancelAddProduct(ActionEvent actionEvent) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600); // delete this when done
-        stage.setTitle("Add Part");
-        stage.setScene(scene);
-        stage.show();
-    }
+
     public void onAddPartButton(ActionEvent actionEvent) {
         transferPart = (Part) partInventoryTable.getSelectionModel().getSelectedItem();
         finalPartList.add(transferPart);
         productFinalTable.setItems(finalPartList);
+
+        //This needs to be redone to work with the missing functions from Product.java
     }
     public void onRemovePartButton(ActionEvent actionEvent) {
         transferPart = (Part) productFinalTable.getSelectionModel().getSelectedItem();
