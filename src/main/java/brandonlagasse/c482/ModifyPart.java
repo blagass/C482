@@ -128,15 +128,17 @@ public class ModifyPart implements Initializable {
             InHouse modifiedInHousePart = new InHouse(id, modifyNameString, cost, stock, max, min, machineId) {
             };
             //Add new part with new attributes to allParts table
-            Inventory.allParts.remove(partIndex);
-            Inventory.allParts.add(modifiedInHousePart);
+            //Inventory.allParts.remove(partIndex);
+            //Inventory.allParts.add(modifiedInHousePart);
+            Inventory.updatePart(partIndex, modifiedInHousePart);
 
 
         }
         else if(outsourcedRadio.isSelected()){ //Doing this over I would find a way to not separate house and outsourced cleaner.
             OutSourced modifiedOutSourcedPart = new OutSourced(id, modifyNameString, cost, stock, max, min, modifyMachCompString);
-            Inventory.allParts.remove(partIndex);
-            Inventory.allParts.add(modifiedOutSourcedPart);
+           // Inventory.allParts.remove(partIndex);
+           // Inventory.allParts.add(modifiedOutSourcedPart);
+            Inventory.updatePart(partIndex, modifiedOutSourcedPart);
         }
         //Load main scene
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));

@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class Product {
+    private ObservableList<Part> associatedParts = FXCollections.observableArrayList(); //I had this in the constructor by accident and it set me back a while trying to figure out.
     private int id;
     private String name;
     private double price;
@@ -12,7 +13,6 @@ public class Product {
     private int min;
     private int max;
     public Product(int id, String name, double price, int stock, int min, int max) {
-        ObservableList<Part> associatedParts = FXCollections.observableArrayList();
         this.id = id;
         this.name = name;
         this.price = price;
@@ -105,14 +105,18 @@ public class Product {
         this.max = max;
     }
 
-    public void addAssociatedPart(Part part){}
+    public void addAssociatedPart(Part part){
+        associatedParts.add(part);
+    }//WAIT until modify Product for these
+
 
     public boolean deleteAssociatedPart(Part selectedAssociatedPart){
+        associatedParts.remove(selectedAssociatedPart);
         return false;
     }
 
-    public ObservableList<Part> getAllAssociatedParts(){
-        return null;
+    public ObservableList<Part> getAllAssociatedParts(){//WAIT until modify Product for these
+        return associatedParts;
     }
 
 }

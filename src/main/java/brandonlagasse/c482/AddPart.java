@@ -56,14 +56,23 @@ public class AddPart implements Initializable {
         double cost = Double.parseDouble(costStr);
         int max = Integer.parseInt(maxStr);
         int min = Integer.parseInt(minStr);
-        int machineId = Integer.parseInt(machineIdStr);
+
 
 
         //If InHouse radio button is selected, create a new inHouse Part and add to inventory, else use Outsourced Part.
         if(inHouseRadio.isSelected()) {
+            //Parse machineIdStr to an Int
+            int machineId = Integer.parseInt(machineIdStr);
             //Create a new inHouse Part
             InHouse inHousePart = new InHouse(id, nameStr, cost, stock, max, min, machineId) {
             };
+            inHousePart.setId(id);
+            inHousePart.setName(nameStr);
+            inHousePart.setPrice(cost);
+            inHousePart.setStock(stock);
+            inHousePart.setMax(max);
+            inHousePart.setMin(min);
+            inHousePart.setMachineId(machineId);
 
             //if(inHousePart instanceof InHouse)
             //    ((InHouse)inHousePart).getMachineId();
@@ -75,7 +84,14 @@ public class AddPart implements Initializable {
             //If inHouse is not selected, make Outsourced Part instead.
             else {
                 OutSourced outsourcedPart = new OutSourced(id, nameStr, cost, stock, min, max, machineIdStr);
-            Inventory.allParts.add(outsourcedPart);
+                outsourcedPart.setId(id);
+                outsourcedPart.setName(nameStr);
+                outsourcedPart.setPrice(cost);
+                outsourcedPart.setStock(stock);
+                outsourcedPart.setMin(min);
+                outsourcedPart.setMax(max);
+
+                Inventory.allParts.add(outsourcedPart);
 
             }
 

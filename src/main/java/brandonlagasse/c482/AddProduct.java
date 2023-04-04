@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import static brandonlagasse.c482.Inventory.allParts;
@@ -24,6 +25,7 @@ import static brandonlagasse.c482.Inventory.getAllParts;
 
 public class AddProduct implements Initializable {
     public Part transferPart = null;
+    public Product transferProduct;
     ObservableList<Part> finalPartList = FXCollections.observableArrayList();
 
     public TextField productIdField;
@@ -51,15 +53,15 @@ public class AddProduct implements Initializable {
 
     public void onAddPartButton(ActionEvent actionEvent) {
         transferPart = (Part) partInventoryTable.getSelectionModel().getSelectedItem();
-        finalPartList.add(transferPart);
-        productFinalTable.setItems(finalPartList);
-
+        transferProduct.addAssociatedPart(transferPart);
+        productFinalTable.setItems(transferProduct.getAllAssociatedParts());
         //This needs to be redone to work with the missing functions from Product.java
     }
     public void onRemovePartButton(ActionEvent actionEvent) {
         transferPart = (Part) productFinalTable.getSelectionModel().getSelectedItem();
-        finalPartList.remove(transferPart);
-        productFinalTable.setItems(finalPartList);
+        transferProduct.deleteAssociatedPart(transferPart);
+        productFinalTable.setItems(transferProduct.getAllAssociatedParts());
+
     }
 
     public void onCancelAddButton(ActionEvent actionEvent) throws IOException {
@@ -71,7 +73,41 @@ public class AddProduct implements Initializable {
         stage.show();
     }
 
-    public void onSaveProductButton(ActionEvent actionEvent) {
+    public void onSaveProductButton(ActionEvent actionEvent) throws IOException {
+        //Get field text and put it into strings
+        String prodIdStr = productIdField.getText();
+        String prodNameStr = productNameField.getText();
+        String prodStockStr = productStockField.getText();
+        String prodPriceStr = productPriceField.getText();
+        String prodMaxStr = productMaxField.getText();
+        String prodMinStr = productMinField.getText();
+
+        //Convert strings to integers
+        int id = Integer.parseInt(prodIdStr);
+        int stock = Integer.parseInt(prodStockStr);
+        double cost = Double.parseDouble(prodPriceStr);
+        int max = Integer.parseInt(prodMaxStr);
+        int min = Integer.parseInt(prodMinStr);
+
+        //Create the new product
+        //Product product = new Product(id,prodNameStr,cost,stock,max,min){};
+        transferProduct.setId(id);
+        transferProduct.setName(prodNameStr);
+        transferProduct.setPrice(cost);
+        transferProduct.setStock(stock);
+        transferProduct.setMax(max);
+        transferProduct.setMin(min);
+
+        Inventory.allProducts.add(transferProduct);
+
+
+        //Go back to the main screen
+        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 800,600);
+        stage.setTitle("Add Part");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
@@ -81,13 +117,29 @@ public class AddProduct implements Initializable {
         invPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         invStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         invCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-        partInventoryTable.setItems(Inventory.getAllParts());
+        //partInventoryTable.setItems(Inventory.getAllParts());
 
         finalPartIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         finalPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         finalPartStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         finalCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+        partInventoryTable.setItems(allParts);
+
+        /////RANDOM ID GENERATOR
+        Random randomId = new Random();
+
+        // Generate random ints from 0 to 999
+        int idResult = randomId.nextInt(1000);
+
+        //Initialize a new product with default values
+        Product product = new Product(0,"na",1,1,1,10);
+        transferProduct = product;
+
+
+        //Set the productId field to the random result and not be editable
+        productIdField.setText(String.valueOf(idResult));
+        productIdField.setEditable(false);
 
 
     }

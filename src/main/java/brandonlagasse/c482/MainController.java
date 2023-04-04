@@ -8,20 +8,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.security.PrivateKey;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static brandonlagasse.c482.Inventory.allParts;
-import static brandonlagasse.c482.Inventory.allProducts;
+import static brandonlagasse.c482.Inventory.*;
 
 
 public class MainController implements Initializable{
@@ -65,7 +62,13 @@ public class MainController implements Initializable{
     }
 
     public void toModifyProduct(ActionEvent actionEvent) throws IOException{
-        Parent root = FXMLLoader.load(getClass().getResource("modify-product.fxml"));
+        //Grab transfer part from ModifyProduct
+        ModifyProduct.passProduct(productTable.getSelectionModel().getSelectedItem());
+
+        //Load modify product scene
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-product.fxml"));
+        Parent root = loader.load();
+
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
         stage.setTitle("Add Part");
@@ -79,14 +82,12 @@ public class MainController implements Initializable{
 
         //MODIFY PART PASS
         //Get selected item in the table and send it to passPart method in ModifyPart controller.
-        ModifyPart.passPart(partTable.getSelectionModel().getSelectedItem());  // MAY NOT BE WORKING
+        ModifyPart.passPart(partTable.getSelectionModel().getSelectedItem());  // Get part and set to transfer part.
 
 
         //Loading ModifyPart scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-part.fxml"));
         Parent root = loader.load();
-
-
 
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
@@ -96,8 +97,44 @@ public class MainController implements Initializable{
     }
 
     public void toDeletePart(ActionEvent actionEvent) {
+        Alert partAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this part? This cannot be undone.");
+        Optional<ButtonType> result = partAlert.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            deletePart(partTable.getSelectionModel().getSelectedItem());
+        }
+
     }
     public void toDeleteProduct(ActionEvent actionEvent) {
+
+        try{
+            Product testProduct;
+
+            testProduct = productTable.getSelectionModel().getSelectedItem();
+            if(!testProduct.getAllAssociatedParts().isEmpty()){
+
+               throw new Exception("Cannot delete a Product with associated Parts.");
+            }
+            else{
+                Alert productAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this product? It cannot be brought back");
+                Optional<ButtonType> result = productAlert.showAndWait();
+
+
+                if(result.isPresent() && result.get() == ButtonType.OK) {
+                    deleteProduct(productTable.getSelectionModel().getSelectedItem());
+                }
+
+            }
+
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("You cannot delete a Product with associated Parts. Remove Parts to delete Product.");
+            alert.showAndWait();
+        }
+
+
+
 
     }
 
@@ -118,7 +155,7 @@ public class MainController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        addTestData();
+       addTestData();
 
 
         partId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -145,15 +182,24 @@ public class MainController implements Initializable{
         String query = partQuery.getText();
 
         //Add query results to a list of parts
-        ObservableList<Part>parts = searchByPartName(query);
+        ObservableList<Part>parts = Inventory.lookupPart(query);
 
+        try {
+            //Instead, if an Id is used and the parts list is > 0, search by id and add to parts list.
+            if (parts.size() == 0) {
 
-        //Instead, if an Id is used and the parts list is > 0, search by id and add to parts list.
-        if(parts.size() == 0){
-            int id = Integer.parseInt(query);
-            Part part = searchByPartId(id);
-            if (part != null)
-                parts.add(part);
+                int id = Integer.parseInt(query);
+                Part part = Inventory.lookupPart(id);
+
+                if (part != null)
+                    parts.add(part);
+            }
+        }
+        catch (NumberFormatException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR,"Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("Please enter a valid Part ID or Name. Field cannot be blank.");
+            alert.showAndWait();
         }
 
         //Finally, add the parts list to the parts table.
@@ -161,8 +207,8 @@ public class MainController implements Initializable{
 
     };
 
-
-    // Search by Part name
+//Delete below if it's never used
+ /*   // Search by Part name
     private ObservableList<Part>searchByPartName(String partialName){
 
         //This is the collection for the result of the search
@@ -194,7 +240,7 @@ public class MainController implements Initializable{
         }
 
         return null;
-    };
+    };*/
 
 
     ////////   PRODUCT SEARCH   ////////
@@ -205,22 +251,29 @@ public class MainController implements Initializable{
         String query = productQuery.getText();
 
         //Add query results to a list of products
-        ObservableList<Product>products = searchByProductName(query);
+        ObservableList<Product>products = Inventory.lookupProduct(query);
 
-
-        //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
-        if(products.size() == 0){
-            int id = Integer.parseInt(query);
-            Product product = searchByProductId(id);
-            if (product != null)
-                products.add(product);
+        try {
+            //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
+            if (products.size() == 0) {
+                int id = Integer.parseInt(query);
+                Product product = Inventory.lookupProduct(id);
+                if (product != null)
+                    products.add(product);
+            }
+        }
+        catch (NumberFormatException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR,"Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("Please enter a valid Product ID or Name. Field cannot be blank.");
+            alert.showAndWait();
         }
 
         //Finally, add the parts list to the products table.
         productTable.setItems(products);
     }
-
-    //Search by Product id
+//Delete below if everything works
+ /*   //Search by Product id
     private Product searchByProductId(int id) {
         ObservableList<Product>allProducts = Inventory.getAllProducts();
 
@@ -250,5 +303,5 @@ public class MainController implements Initializable{
 
         return productNames;
 
-    };
+    };*/
 }
