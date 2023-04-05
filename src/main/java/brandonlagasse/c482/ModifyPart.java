@@ -57,8 +57,6 @@ public class ModifyPart implements Initializable {
     public String modifyMinStr = String.valueOf(modifyMin); //Converted int to String to display in field
 
 
-    ////////NEXT: ADD RADIO BUTTON GROUP AND MACHINE ID
-
     public void cancelModifyPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -104,49 +102,81 @@ public class ModifyPart implements Initializable {
     }
 
     public void onSaveModifyPart(ActionEvent actionEvent) throws IOException {
-        //Set new string for the appropriate text fields
-        String modifyIdString = modifyPartId.getText();
-        String modifyNameString = modifyPartName.getText();
-        String modifyStockString = modifyPartStock.getText();
-        String modifyCostString = modifyPartCost.getText();
-        String modifyMaxString = modifyPartMax.getText();
-        String modifyMinString = modifyPartMin.getText();
-        String modifyMachCompString = modifyPartMachComp.getText();
+        try {
+            //Set new string for the appropriate text fields
+            String modifyIdString = modifyPartId.getText();
+            String modifyNameString = modifyPartName.getText();
+            String modifyStockString = modifyPartStock.getText();
+            String modifyCostString = modifyPartCost.getText();
+            String modifyMaxString = modifyPartMax.getText();
+            String modifyMinString = modifyPartMin.getText();
+            String modifyMachCompString = modifyPartMachComp.getText();
 
-        //Switch Strings to correct types
-        int id = Integer.parseInt(modifyIdString);
-        int stock = Integer.parseInt(modifyStockString);
-        double cost = Double.parseDouble(modifyCostString);
-        int max = Integer.parseInt(modifyMaxString);
-        int min = Integer.parseInt(modifyMinString);
+            //Switch Strings to correct types
+            int id = Integer.parseInt(modifyIdString);
+            int stock = Integer.parseInt(modifyStockString);
+            double cost = Double.parseDouble(modifyCostString);
+            int max = Integer.parseInt(modifyMaxString);
+            int min = Integer.parseInt(modifyMinString);
 
-        if(inHouseRadio.isSelected()){
-
+            //CREATE INHOUSE PART
             int machineId = Integer.parseInt(modifyMachCompString);
-
             //Create a new Part
             InHouse modifiedInHousePart = new InHouse(id, modifyNameString, cost, stock, max, min, machineId) {
             };
-            //Add new part with new attributes to allParts table
-            //Inventory.allParts.remove(partIndex);
-            //Inventory.allParts.add(modifiedInHousePart);
-            Inventory.updatePart(partIndex, modifiedInHousePart);
 
-
-        }
-        else if(outsourcedRadio.isSelected()){ //Doing this over I would find a way to not separate house and outsourced cleaner.
+            //CREATE OUTSOURCED PART
             OutSourced modifiedOutSourcedPart = new OutSourced(id, modifyNameString, cost, stock, max, min, modifyMachCompString);
-           // Inventory.allParts.remove(partIndex);
-           // Inventory.allParts.add(modifiedOutSourcedPart);
-            Inventory.updatePart(partIndex, modifiedOutSourcedPart);
+
+            try {
+                if (modifiedInHousePart.getMin() > modifiedInHousePart.getMax()) {
+                    throw new ArithmeticException("Min is greater than Max.");
+                }
+                if (modifiedOutSourcedPart.getMin() > modifiedInHousePart.getMax()) {
+                    throw new ArithmeticException("Min is greater than Max.");
+                }
+
+
+                try {
+                    if(modifiedInHousePart.getStock() < modifiedInHousePart.getMin() || modifiedInHousePart.getStock() > modifiedInHousePart.getMax()){
+                        throw new ArithmeticException("Inventory must be between Min and Max");
+                    }
+                    if(modifiedOutSourcedPart.getStock() < modifiedOutSourcedPart.getMin() || modifiedOutSourcedPart.getStock() > modifiedOutSourcedPart.getMax()){
+                        throw new ArithmeticException("Inventory must be between Min and Max");
+                    }
+
+                    if (inHouseRadio.isSelected()) {
+                        Inventory.updatePart(partIndex, modifiedInHousePart);
+                    } else if (outsourcedRadio.isSelected()) {
+                        Inventory.updatePart(partIndex, modifiedOutSourcedPart);
+                    }
+                    //Load main scene
+                    Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root, 800, 600);
+                    stage.setTitle("Add Part");
+                    stage.setScene(scene);
+                    stage.show();
+
+                }catch(Exception e){//Alert for stock
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Uh oh");
+                    alert.setContentText("Inventory must be between Min and Max.");
+                    alert.showAndWait();
+                }
+            }catch(Exception e){ //Alert for Min/Max
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Uh oh");
+                alert.setContentText("Max must be greater than Min.");
+                alert.showAndWait();
+            }
+
+        }catch(NumberFormatException nfe) {//Alert for format and blanks.
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Uh oh");
+            alert.setContentText("Incorrect format. Please check your input. Fields cannot be blank.");
+            alert.showAndWait();
         }
-        //Load main scene
-        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600);
-        stage.setTitle("Add Part");
-        stage.setScene(scene);
-        stage.show();
 
     }
 }

@@ -8,15 +8,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static brandonlagasse.c482.Inventory.allParts;
@@ -148,9 +146,17 @@ public class ModifyProduct implements Initializable {
     }
 
     public void onPartRemove(ActionEvent actionEvent) {
-        transferProduct.deleteAssociatedPart((Part)modPartTable.getSelectionModel().getSelectedItem());
-        finalPartList = transferProduct.getAllAssociatedParts();
-        modFinalPartTable.setItems(finalPartList);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Warning!");
+        alert.setTitle("You're about to remove a prt from the list.");
+        alert.setContentText("Remove part?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            transferProduct.deleteAssociatedPart((Part) modPartTable.getSelectionModel().getSelectedItem());
+            finalPartList = transferProduct.getAllAssociatedParts();
+            modFinalPartTable.setItems(finalPartList);
+        }
     }
 
     public void onCancelModify(ActionEvent actionEvent) throws IOException {
@@ -163,45 +169,75 @@ public class ModifyProduct implements Initializable {
     }
 
     public void onModifySave(ActionEvent actionEvent) throws IOException {
-        //Get Field text and add to strings
-        String prodIdStr = modIdField.getText();
-        String prodNameStr = modNameField.getText();
-        String prodStockStr = modInvField.getText();
-        String prodPriceStr = modPriceField.getText();
-        String prodMaxStr = modMaxField.getText();
-        String prodMinStr = modMinField.getText();
 
-        //Convert strings into integers
-        int id = Integer.parseInt(prodIdStr);
-        int stock = Integer.parseInt(prodStockStr);
-        double cost = Double.parseDouble(prodPriceStr);
-        int max = Integer.parseInt(prodMaxStr);
-        int min = Integer.parseInt(prodMinStr);
+        try {
+            //Get Field text and add to strings
+            String prodIdStr = modIdField.getText();
+            String prodNameStr = modNameField.getText();
+            String prodStockStr = modInvField.getText();
+            String prodPriceStr = modPriceField.getText();
+            String prodMaxStr = modMaxField.getText();
+            String prodMinStr = modMinField.getText();
 
-        //Product product = new Product(id,prodNameStr,cost,stock,max,min){};
+            //Convert strings into integers
+            int id = Integer.parseInt(prodIdStr);
+            int stock = Integer.parseInt(prodStockStr);
+            double cost = Double.parseDouble(prodPriceStr);
+            int max = Integer.parseInt(prodMaxStr);
+            int min = Integer.parseInt(prodMinStr);
 
-
-        transferProduct.setId(id);
-        transferProduct.setName(prodNameStr);
-        transferProduct.setPrice(cost);
-        transferProduct.setStock(stock);
-        transferProduct.setMax(max);
-        transferProduct.setMin(min);
+            //Product product = new Product(id,prodNameStr,cost,stock,max,min){};
 
 
-        //Update inventory with the product
-        Inventory.updateProduct(productIndex,transferProduct);
+            transferProduct.setId(id);
+            transferProduct.setName(prodNameStr);
+            transferProduct.setPrice(cost);
+            transferProduct.setStock(stock);
+            transferProduct.setMax(max);
+            transferProduct.setMin(min);
+
+            try {
+                if (transferProduct.getMin() > transferProduct.getMax()) {
+                    throw new ArithmeticException("Min is greater than Max.");
+                }
+                try {
+
+                    if(transferProduct.getStock() < transferProduct.getMin() || transferProduct.getStock() > transferProduct.getMax()){
+                        throw new ArithmeticException("Inventory must be between Min and Max");
+                    }
+
+                    //Update inventory with the product
+                    Inventory.updateProduct(productIndex, transferProduct);
 
 
-
-        //Go back to the main screen
-        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600);
-        stage.setTitle("Add Part");
-        stage.setScene(scene);
-        stage.show();
-        //RESUME HERE
+                    //Go back to the main screen
+                    Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(root, 800, 600);
+                    stage.setTitle("Add Part");
+                    stage.setScene(scene);
+                    stage.show();
+                }
+                catch (Exception e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Uh oh");
+                    alert.setContentText("Inventory must be between Min and Max.");
+                    alert.showAndWait();
+                }
+            }
+            catch (Exception e){
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Uh oh");
+                alert.setContentText("Min must be greater than Max.");
+                alert.showAndWait();
+            }
+        }
+        catch (NumberFormatException nfe) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Uh oh");
+            alert.setContentText("Incorrect format. Please check your input. Fields cannot be blank.");
+            alert.showAndWait();
+        }
 
     }
 

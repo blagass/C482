@@ -23,7 +23,7 @@
                      <children>
                         <Pane prefHeight="76.0" prefWidth="100.0">
                            <children>
-                              <RadioButton fx:id="inHouseRadio" layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#onInHouseRadio" text="In-House">
+                              <RadioButton fx:id="inHouseRadio" layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#onInHouseRadio" selected="true" text="In-House">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="addPartToggle" />
                                  </toggleGroup></RadioButton>
