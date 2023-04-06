@@ -44,7 +44,7 @@ public class AddPart implements Initializable {
 
     //I CAN'T FIGURE OUT HOW TO GET THIS EXCEPTION HANDLING TO WORK ///
 
-        try {
+        //try {
             //Receive String input from associated text fields
             String idStr = partIdField.getText();
             String nameStr = partNameField.getText();
@@ -60,6 +60,8 @@ public class AddPart implements Initializable {
             double cost = Double.parseDouble(costStr);
             int max = Integer.parseInt(maxStr);
             int min = Integer.parseInt(minStr);
+
+
 
             //CREATE AN IN HOUSE PART
             //Parse machineIdStr to an Int
@@ -78,17 +80,22 @@ public class AddPart implements Initializable {
             inHousePart.setMin(min);
             inHousePart.setMachineId(machineId);
 
-            //CREATE AN OUSOURCEDPART
 
-            OutSourced outsourcedPart = new OutSourced(id, nameStr, cost, stock, min, max, machineIdStr);
+        //Create an outsourced Part
+        OutSourced outsourcedPart = new OutSourced(id, nameStr, cost, stock, min, max, machineIdStr){};
 
-            //Transfer variables to new outsourcedPart
-            outsourcedPart.setId(id);
-            outsourcedPart.setName(nameStr);
-            outsourcedPart.setPrice(cost);
-            outsourcedPart.setStock(stock);
-            outsourcedPart.setMin(min);
-            outsourcedPart.setMax(max);
+        //Transfer variables to new outsourcedPart
+        outsourcedPart.setId(id);
+        outsourcedPart.setName(nameStr);
+        outsourcedPart.setPrice(cost);
+        outsourcedPart.setStock(stock);
+        outsourcedPart.setMin(min);
+        outsourcedPart.setMax(max);
+        outsourcedPart.setCompanyName(machineIdStr);
+
+
+        //CREATE AN OUSOURCEDPART
+
 
             try {
                 if (inHousePart.getMin() > inHousePart.getMax()) {
@@ -137,12 +144,12 @@ public class AddPart implements Initializable {
                 alert.showAndWait();
             }
 
-        }catch(NumberFormatException nfe) { //Alert for format and blanks.
+       /* }catch(NumberFormatException nfe) { //Alert for format and blanks.
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Uh oh");
             alert.setContentText("Incorrect format. Please check your input. Fields cannot be blank.");
             alert.showAndWait();
-        }
+        }*/
 
     };
 
