@@ -47,6 +47,8 @@ public class MainController implements Initializable{
         Parent root = FXMLLoader.load(getClass().getResource("add-part.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Add Part");
         stage.setScene(scene);
         stage.show();
@@ -56,6 +58,8 @@ public class MainController implements Initializable{
         Parent root = FXMLLoader.load(getClass().getResource("add-product.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Add Product");
         stage.setScene(scene);
         stage.show();
@@ -71,6 +75,8 @@ public class MainController implements Initializable{
 
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Add Part");
         stage.setScene(scene);
         stage.show();
@@ -91,6 +97,8 @@ public class MainController implements Initializable{
 
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Modify Part");
         stage.setScene(scene);
         stage.show();

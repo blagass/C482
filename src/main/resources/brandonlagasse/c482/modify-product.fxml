@@ -58,7 +58,7 @@
                                  <GridPane.margin>
                                     <Insets right="10.0" />
                                  </GridPane.margin></Label>
-                              <TextField fx:id="modIdField" editable="false" GridPane.columnIndex="1" />
+                              <TextField fx:id="modIdField" editable="false" promptText="Auto gen disabled" GridPane.columnIndex="1" />
                               <TextField fx:id="modNameField" minWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets />

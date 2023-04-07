@@ -1,0 +1,12 @@
+.root {
+    -fx-background-color: lightskyblue;
+    -fx-border-color: blue;
+    -fx-font-family: "Roboto Light";
+}
+
+.button{
+    -fx-background-color: paleturquoise;
+}
+.table-view{
+    -fx-background-color: lightblue;
+}

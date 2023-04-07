@@ -78,6 +78,8 @@ public class ModifyProduct implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Add Part");
         stage.setScene(scene);
         stage.show();
@@ -163,6 +165,8 @@ public class ModifyProduct implements Initializable {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800,600);
+        String css = this.getClass().getResource("style.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Add Part");
         stage.setScene(scene);
         stage.show();
@@ -214,6 +218,8 @@ public class ModifyProduct implements Initializable {
                     Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     Scene scene = new Scene(root, 800, 600);
+                    String css = this.getClass().getResource("style.css").toExternalForm();
+                    scene.getStylesheets().add(css);
                     stage.setTitle("Add Part");
                     stage.setScene(scene);
                     stage.show();
