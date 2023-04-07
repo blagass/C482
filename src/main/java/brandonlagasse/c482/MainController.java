@@ -155,7 +155,7 @@ public class MainController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-       addTestData();
+       //addTestData();
 
 
         partId.setCellValueFactory(new PropertyValueFactory<>("id"));

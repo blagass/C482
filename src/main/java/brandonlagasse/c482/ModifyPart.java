@@ -102,81 +102,136 @@ public class ModifyPart implements Initializable {
     }
 
     public void onSaveModifyPart(ActionEvent actionEvent) throws IOException {
-        try {
-            //Set new string for the appropriate text fields
-            String modifyIdString = modifyPartId.getText();
-            String modifyNameString = modifyPartName.getText();
-            String modifyStockString = modifyPartStock.getText();
-            String modifyCostString = modifyPartCost.getText();
-            String modifyMaxString = modifyPartMax.getText();
-            String modifyMinString = modifyPartMin.getText();
-            String modifyMachCompString = modifyPartMachComp.getText();
-
-            //Switch Strings to correct types
-            int id = Integer.parseInt(modifyIdString);
-            int stock = Integer.parseInt(modifyStockString);
-            double cost = Double.parseDouble(modifyCostString);
-            int max = Integer.parseInt(modifyMaxString);
-            int min = Integer.parseInt(modifyMinString);
-
-            //CREATE INHOUSE PART
-            int machineId = Integer.parseInt(modifyMachCompString);
-            //Create a new Part
-            InHouse modifiedInHousePart = new InHouse(id, modifyNameString, cost, stock, max, min, machineId) {
-            };
-
-            //CREATE OUTSOURCED PART
-            OutSourced modifiedOutSourcedPart = new OutSourced(id, modifyNameString, cost, stock, max, min, modifyMachCompString);
-
-            try {
-                if (modifiedInHousePart.getMin() > modifiedInHousePart.getMax()) {
-                    throw new ArithmeticException("Min is greater than Max.");
-                }
-                if (modifiedOutSourcedPart.getMin() > modifiedInHousePart.getMax()) {
-                    throw new ArithmeticException("Min is greater than Max.");
-                }
-
-
-                try {
-                    if(modifiedInHousePart.getStock() < modifiedInHousePart.getMin() || modifiedInHousePart.getStock() > modifiedInHousePart.getMax()){
-                        throw new ArithmeticException("Inventory must be between Min and Max");
-                    }
-                    if(modifiedOutSourcedPart.getStock() < modifiedOutSourcedPart.getMin() || modifiedOutSourcedPart.getStock() > modifiedOutSourcedPart.getMax()){
-                        throw new ArithmeticException("Inventory must be between Min and Max");
-                    }
-
                     if (inHouseRadio.isSelected()) {
-                        Inventory.updatePart(partIndex, modifiedInHousePart);
+                        //Set new string for the appropriate text fields
+                        String modifyIdString = modifyPartId.getText();
+                        String modifyNameString = modifyPartName.getText();
+                        String modifyStockString = modifyPartStock.getText();
+                        String modifyCostString = modifyPartCost.getText();
+                        String modifyMaxString = modifyPartMax.getText();
+                        String modifyMinString = modifyPartMin.getText();
+                        String modifyMachCompString = modifyPartMachComp.getText();
+
+                        //Switch Strings to correct types
+                        int id = Integer.parseInt(modifyIdString);
+                        int stock = Integer.parseInt(modifyStockString);
+                        double cost = Double.parseDouble(modifyCostString);
+                        int max = Integer.parseInt(modifyMaxString);
+                        int min = Integer.parseInt(modifyMinString);
+
+                        //CREATE INHOUSE PART
+                        int machineId = Integer.parseInt(modifyMachCompString);
+
+                        //Create a new Part
+                        InHouse modifiedInHousePart = new InHouse(id, modifyNameString, cost, stock, max, min, machineId) {};
+                        //Transfer variables to new inHousePart
+                        modifiedInHousePart.setId(id);
+                        modifiedInHousePart.setName(modifyNameString);
+                        modifiedInHousePart.setPrice(cost);
+                        modifiedInHousePart.setStock(stock);
+                        modifiedInHousePart.setMax(max);
+                        modifiedInHousePart.setMin(min);
+                        modifiedInHousePart.setMachineId(machineId);
+
+                        try {
+                            if (modifiedInHousePart.getMin() > modifiedInHousePart.getMax()) {
+                                throw new ArithmeticException("Min is greater than Max.");
+                            }
+                            try {
+                                if (modifiedInHousePart.getStock() < modifiedInHousePart.getMin() || modifiedInHousePart.getStock() > modifiedInHousePart.getMax()) {
+                                    throw new ArithmeticException("Inventory must be between Min and Max");
+                                }
+
+                                Inventory.updatePart(partIndex, modifiedInHousePart);
+
+                                Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+                                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                                Scene scene = new Scene(root, 800, 600);
+                                stage.setTitle("Add Part");
+                                stage.setScene(scene);
+                                stage.show();
+
+                            }catch(ArithmeticException e) {
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Uh oh");
+                                alert.setContentText("Inventory must be between Min and Max.");
+                                alert.showAndWait();
+                            }
+                        }catch(ArithmeticException e){
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Uh oh");
+                            alert.setContentText("Max must be greater than Min.");
+                            alert.showAndWait();
+                        }
+
+
                     } else if (outsourcedRadio.isSelected()) {
-                        Inventory.updatePart(partIndex, modifiedOutSourcedPart);
+                        //Set new string for the appropriate text fields
+                        String modifyIdString = modifyPartId.getText();
+                        String modifyNameString = modifyPartName.getText();
+                        String modifyStockString = modifyPartStock.getText();
+                        String modifyCostString = modifyPartCost.getText();
+                        String modifyMaxString = modifyPartMax.getText();
+                        String modifyMinString = modifyPartMin.getText();
+                        String modifyMachCompString = modifyPartMachComp.getText();
+
+                        //Switch Strings to correct types
+                        int id = Integer.parseInt(modifyIdString);
+                        int stock = Integer.parseInt(modifyStockString);
+                        double cost = Double.parseDouble(modifyCostString);
+                        int max = Integer.parseInt(modifyMaxString);
+                        int min = Integer.parseInt(modifyMinString);
+                        //CREATE OUTSOURCED PART
+                        OutSourced modifiedOutSourcedPart = new OutSourced(id, modifyNameString, cost, stock, max, min, modifyMachCompString);
+
+                        //Transfer variables to new outsourcedPart
+                        modifiedOutSourcedPart.setId(id);
+                        modifiedOutSourcedPart.setName(modifyNameString);
+                        modifiedOutSourcedPart.setPrice(cost);
+                        modifiedOutSourcedPart.setStock(stock);
+                        modifiedOutSourcedPart.setMin(min);
+                        modifiedOutSourcedPart.setMax(max);
+                        modifiedOutSourcedPart.setCompanyName(modifyMachCompString);
+
+                        try {
+
+                            if (modifiedOutSourcedPart.getMin() > modifiedOutSourcedPart.getMax()) {
+                                throw new ArithmeticException("Min is greater than Max.");
+                            }
+
+                            try {
+
+                                if (modifiedOutSourcedPart.getStock() < modifiedOutSourcedPart.getMin() || modifiedOutSourcedPart.getStock() > modifiedOutSourcedPart.getMax()) {
+                                    throw new ArithmeticException("Inventory must be between Min and Max");
+                                }
+
+                                Inventory.updatePart(partIndex, modifiedOutSourcedPart);
+
+                                Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+                                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                                Scene scene = new Scene(root, 800, 600);
+                                stage.setTitle("Add Part");
+                                stage.setScene(scene);
+                                stage.show();
+
+                            }catch(ArithmeticException e){
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setTitle("Uh oh");
+                                alert.setContentText("Inventory must be between Min and Max.");
+                                alert.showAndWait();
+                            }
+                        }catch(ArithmeticException e){
+                            Alert alert = new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Uh oh");
+                            alert.setContentText("Max must be greater than Min.");
+                            alert.showAndWait();
+                        }
+
                     }
                     //Load main scene
-                    Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                    Scene scene = new Scene(root, 800, 600);
-                    stage.setTitle("Add Part");
-                    stage.setScene(scene);
-                    stage.show();
 
-                }catch(Exception e){//Alert for stock
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Uh oh");
-                    alert.setContentText("Inventory must be between Min and Max.");
-                    alert.showAndWait();
-                }
-            }catch(Exception e){ //Alert for Min/Max
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Uh oh");
-                alert.setContentText("Max must be greater than Min.");
-                alert.showAndWait();
-            }
 
-        }catch(NumberFormatException nfe) {//Alert for format and blanks.
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Uh oh");
-            alert.setContentText("Incorrect format. Please check your input. Fields cannot be blank.");
-            alert.showAndWait();
-        }
+
 
     }
 }
