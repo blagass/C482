@@ -22,7 +22,6 @@ import static brandonlagasse.c482.Inventory.getAllParts;
 
 public class ModifyProduct implements Initializable {
     private static Product transferProduct;
-    private static Part transferPart;
     ObservableList<Part>finalPartList = FXCollections.observableArrayList();
 
     public int productIndex = Inventory.allProducts.indexOf(transferProduct);
@@ -48,14 +47,13 @@ public class ModifyProduct implements Initializable {
     public TableColumn finalPartStockCol;
     public TableColumn finalCostCol;
 
-    //Passing function for main to add product.
+    /**
+     * Passing function for main to add product.
+     * @param product to be added to transferProduct
+     */
     public static void passProduct(Product product) {
         transferProduct = product;
     }
-    public static void passPart(Part part) {
-        transferPart = part;
-    }
-
 
     public int modifyId = transferProduct.getId();
     public String modifyIdStr = String.valueOf(modifyId); //Converted int to String to display in field
@@ -74,19 +72,12 @@ public class ModifyProduct implements Initializable {
     public int modifyMin = transferProduct.getMin();
     public String modifyMinStr = String.valueOf(modifyMin); //Converted int to String to display in field
 
-    public void cancelModifyProduct(ActionEvent actionEvent) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600);
-        String css = this.getClass().getResource("style.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setTitle("Add Part");
-        stage.setScene(scene);
-        stage.show();
-    }
-
     //PART SEARCH////////////////////////////////
-    public void onPartQuery(ActionEvent actionEvent) {
+
+    /**
+     * Search by part name method.
+     */
+    public void onPartQuery() {
         //Receive user input
         String query = partQueryField.getText();
 
@@ -106,6 +97,12 @@ public class ModifyProduct implements Initializable {
         modPartTable.setItems(parts);
 
     }
+
+    /**
+     * Search by Part Name method.
+     * @param partialName to be search for
+     * @return any matching parts
+     */
     private ObservableList<Part>searchByPartName(String partialName){
 
         //This is the collection for the result of the search
@@ -125,6 +122,12 @@ public class ModifyProduct implements Initializable {
 
     };
 
+
+    /**
+     * This method searches by part id.
+     * @param id to be searched for
+     * @return any matching parts
+     */
     private Part searchByPartId (int id){
         ObservableList<Part>allParts = Inventory.getAllParts();
 
@@ -138,7 +141,11 @@ public class ModifyProduct implements Initializable {
         return null;
     };
     //PART SEARCH END////////////////////////////////
-    public void onPartAdd(ActionEvent actionEvent) {
+
+    /**
+     * This method transfers the selected part from the parts table to the final parts table.
+     */
+    public void onPartAdd() {
 
         transferProduct.addAssociatedPart((Part)modPartTable.getSelectionModel().getSelectedItem());
         finalPartList = transferProduct.getAllAssociatedParts();
@@ -147,7 +154,10 @@ public class ModifyProduct implements Initializable {
 
     }
 
-    public void onPartRemove(ActionEvent actionEvent) {
+    /**
+     * This method removes the selected part from the parts table.
+     */
+    public void onPartRemove() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Warning!");
         alert.setTitle("You're about to remove a prt from the list.");
         alert.setContentText("Remove part?");
@@ -161,6 +171,12 @@ public class ModifyProduct implements Initializable {
         }
     }
 
+    /**
+     * This method cancels the current screen and sends the user back to the main screen.
+     * @param actionEvent for Cancel button
+     * @throws IOException for any IOException that may occur
+     */
+
     public void onCancelModify(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -172,7 +188,11 @@ public class ModifyProduct implements Initializable {
         stage.show();
     }
 
-    public void onModifySave(ActionEvent actionEvent) throws IOException {
+    /**
+     * This method takes the fields and final parts table and updates the transferred product.
+     * @param actionEvent for the Save button
+     */
+    public void onModifySave(ActionEvent actionEvent) {
 
         try {
             //Get Field text and add to strings
@@ -247,7 +267,11 @@ public class ModifyProduct implements Initializable {
 
     }
 
-
+    /**
+     * This is the initialization method which sets up our tables and transfers the selected part to be modified.
+     * @param url for future DB connections
+     * @param resourceBundle for resources folder
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set up column names for each table

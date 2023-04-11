@@ -8,6 +8,12 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainScreen extends Application {
+    /**
+     * The main class that sets the stage
+     * @param stage for starting the app
+     * @throws IOException for any IOExceptions
+     * FUTURE ENHANCEMENT: I would combine the functionality of both adding parts and products to the same screen. During testing, I found that having to make a prt first, then back out and into the Add Product screen was a lot of steps.
+     */
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainScreen.class.getResource("main-view.fxml"));
@@ -19,6 +25,10 @@ public class MainScreen extends Application {
         stage.show();
     }
 
+    /**
+     * Calls the start method
+     * @param args loads main args
+     */
     public static void main(String[] args) {
         launch();
     }

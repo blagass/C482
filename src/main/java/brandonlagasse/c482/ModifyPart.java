@@ -16,7 +16,6 @@ import java.util.ResourceBundle;
 public class ModifyPart implements Initializable {
 
     public Button cancelModifyPart;
-    //Part object used for transferring between main and add part windows.
     private static Part transferPart = null;
     public Label machLabel;
     public TextField modifyPartId;
@@ -31,13 +30,15 @@ public class ModifyPart implements Initializable {
     public Button saveModifyPart;
     public ToggleGroup modifyButtonToggle;
 
-    //Passing function for main to add part.
+    /**
+     * Passing function for main to add part.
+     * @param part to be set as transferPart
+     */
     public static void passPart(Part part) {
         transferPart = part;
 
     }
-    //Transfer Part attributes to variable that label displays will pull from
-    //DOING THIS OVER - I would execute the duplication of efforts in each controller to a single method
+
     public int partIndex = Inventory.allParts.indexOf(transferPart);
     public int modifyId = transferPart.getId();
     public String modifyIdStr = String.valueOf(modifyId); //Converted int to String to display in field
@@ -56,7 +57,11 @@ public class ModifyPart implements Initializable {
     public int modifyMin = transferPart.getMin();
     public String modifyMinStr = String.valueOf(modifyMin); //Converted int to String to display in field
 
-
+    /**
+     * This method cancels the modify part function and returns to the main screen.
+     * @param actionEvent for Cancel bbutton
+     * @throws IOException for IOException
+     */
     public void cancelModifyPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -68,6 +73,11 @@ public class ModifyPart implements Initializable {
         stage.show();
     }
 
+    /**
+     * Initialize class. This method transfers the part from the main-screen.fxml to transferPart.
+     * @param url for future DB connection
+     * @param resourceBundle for resources folder
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -93,16 +103,28 @@ public class ModifyPart implements Initializable {
             outsourcedRadio.fire();
         }
 
-
-
     }
-    //Switch labels on radio buttons
-    public void onModInHouse(ActionEvent actionEvent) {machLabel.setText("Machine ID");
+    //Switch labels on radio button to in house
+
+    /**
+     * This method sets the label to Machine ID
+     */
+    public void onModInHouse() {machLabel.setText("Machine ID");
+    }
+    //Switch labels on the radio button to outsourced
+
+    /**
+     * This method sets the label to Company Name
+     */
+    public void onModOutsourced() {machLabel.setText("Company Name");
     }
 
-    public void onModOutsourced(ActionEvent actionEvent) {machLabel.setText("Company Name");
-    }
-
+    /**
+     * This method saves the fields and final list and returns to the main screen.
+     * @param actionEvent for Save button
+     * @throws IOException for any IOException
+     * RUNTIME ERROR:I had a difficult time isolating the try/catch block around these, and kept running into errors until I realized how to partition the abstract parts, and then check for exceptions. It took me a while to figure out that my initial structure threw an error because it was trying to parse a string into an integer.
+     */
     public void onSaveModifyPart(ActionEvent actionEvent) throws IOException {
                     if (inHouseRadio.isSelected()) {
                         //Set new string for the appropriate text fields
@@ -234,10 +256,6 @@ public class ModifyPart implements Initializable {
                         }
 
                     }
-                    //Load main scene
-
-
-
 
     }
 }

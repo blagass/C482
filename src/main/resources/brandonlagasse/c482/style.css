@@ -1,12 +1,17 @@
 .root {
-    -fx-background-color: lightskyblue;
-    -fx-border-color: blue;
-    -fx-font-family: "Roboto Light";
+    -fx-background-color: mintcream;
+    -fx-border-color: lightskyblue;
+    -fx-font-family: "Roboto Bold";
 }
 
+
 .button{
-    -fx-background-color: paleturquoise;
+    -fx-background-color: lightcyan;
+    -fx-font-family: "Roboto Bold";
+    -fx-border-color: lightskyblue;
 }
 .table-view{
     -fx-background-color: lightblue;
+    -fx-font-family: "Roboto Light";
+
 }

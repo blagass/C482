@@ -12,6 +12,16 @@ public class Product {
     private int stock;
     private int min;
     private int max;
+
+    /**
+     * Constructor for Product
+     * @param id
+     * @param name
+     * @param price
+     * @param stock
+     * @param min
+     * @param max
+     */
     public Product(int id, String name, double price, int stock, int min, int max) {
         this.id = id;
         this.name = name;
@@ -105,17 +115,29 @@ public class Product {
         this.max = max;
     }
 
+    /**
+     * This method ads the part to the associatedparts list
+     * @param part to be added to associatedParts list
+     */
     public void addAssociatedPart(Part part){
         associatedParts.add(part);
-    }//WAIT until modify Product for these
+    }
 
-
+    /**
+     * This method removes the selected part from the associated parts list.
+     * @param selectedAssociatedPart
+     * @return boolean for deltion error
+     */
     public boolean deleteAssociatedPart(Part selectedAssociatedPart){
         associatedParts.remove(selectedAssociatedPart);
         return false;
     }
 
-    public ObservableList<Part> getAllAssociatedParts(){//WAIT until modify Product for these
+    /**
+     * This method is the getter for the associatedParts list.
+     * @return returns the associatedParts list
+     */
+    public ObservableList<Part> getAllAssociatedParts(){
         return associatedParts;
     }
 

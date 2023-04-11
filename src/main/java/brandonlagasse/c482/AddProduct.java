@@ -24,7 +24,6 @@ import static brandonlagasse.c482.Inventory.getAllParts;
 public class AddProduct implements Initializable {
     public Part transferPart = null;
     public Product transferProduct;
-    ObservableList<Part> finalPartList = FXCollections.observableArrayList();
 
     public TextField productIdField;
     public TextField productNameField;
@@ -48,16 +47,22 @@ public class AddProduct implements Initializable {
     public Button cancelAddButton;
     public Button saveProductButton;
 
-
-    public void onAddPartButton(ActionEvent actionEvent) {
+    /**
+     * This event is fired when the Add Part button is clicked to transfer a Part from one table to another.
+     */
+    public void onAddPartButton() {
         transferPart = (Part) partInventoryTable.getSelectionModel().getSelectedItem();
         transferProduct.addAssociatedPart(transferPart);
         productFinalTable.setItems(transferProduct.getAllAssociatedParts());
         //This needs to be redone to work with the missing functions from Product.java
     }
-    public void onRemovePartButton(ActionEvent actionEvent) {
+
+    /**
+     * This event is fired when the Remove Part button is clicked to remove a part from the Final Part Table.
+     */
+    public void onRemovePartButton() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,"Warning!");
-        alert.setTitle("You're about to remove a prt from the list.");
+        alert.setTitle("You're about to remove a part from the list.");
         alert.setContentText("Remove part?");
 
         Optional<ButtonType> result = alert.showAndWait();
@@ -67,11 +72,13 @@ public class AddProduct implements Initializable {
             transferProduct.deleteAssociatedPart(transferPart);
             productFinalTable.setItems(transferProduct.getAllAssociatedParts());
         }
-
-
-
     }
 
+    /**
+     * This action event cancels the Add Product screen. When the button is pressed, it sends the user back to the main screen.
+     * @param actionEvent cancels the current product creation.
+     * @throws IOException for an I/O error
+     */
     public void onCancelAddButton(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -83,6 +90,11 @@ public class AddProduct implements Initializable {
         stage.show();
     }
 
+    /**
+     * This action even is fired when someone wants to save the changes they made on the screen. It will save the product and send the user back to the main screen.
+     * @param actionEvent to save the current product build
+     * @throws IOException for an I/O error
+     */
     public void onSaveProductButton(ActionEvent actionEvent) throws IOException {
         try {
             //Get field text and put it into strings
@@ -119,7 +131,7 @@ public class AddProduct implements Initializable {
                             throw new ArithmeticException("Inventory must be between Min and Max");
                         }
                         //Add the final transferProduct to the allProducts list in Inventory
-                        Inventory.allProducts.add(transferProduct);
+                        Inventory.addProduct(transferProduct);
 
                         //Go back to the main screen
                         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
@@ -154,6 +166,11 @@ public class AddProduct implements Initializable {
 
     }
 
+    /**
+     * Initialing class. This sets the tables, and pulls in the transfer product from the main screen.
+     * @param url possible db connection for future build
+     * @param resourceBundle for the resources folder
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Set up column names for each table

@@ -42,7 +42,11 @@ public class MainController implements Initializable{
     public TextField partQuery;
     public TextField productQuery;
 
-
+    /**
+     * This is an action event to switch scenes to the Add Part view. This action also loads the common css file.
+     * @param actionEvent for Add Part button
+     * @throws IOException for I/O exceptions
+     */
     public void toAddPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("add-part.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -54,6 +58,11 @@ public class MainController implements Initializable{
         stage.show();
     }
 
+    /**
+     * This is the action event to switch to the Add Product view
+     * @param actionEvent for Add Product button
+     * @throws IOException for I/O exceptions
+     */
     public void toAddProduct(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("add-product.fxml"));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -65,54 +74,96 @@ public class MainController implements Initializable{
         stage.show();
     }
 
+    /**
+     * This is the action event to swtich scenes to the Modify Product view.
+     * @param actionEvent for Modify Product button
+     * @throws IOException for IOException
+     */
     public void toModifyProduct(ActionEvent actionEvent) throws IOException{
-        //Grab transfer part from ModifyProduct
-        ModifyProduct.passProduct(productTable.getSelectionModel().getSelectedItem());
 
-        //Load modify product scene
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-product.fxml"));
-        Parent root = loader.load();
+       try {
+           //Grab transfer part from ModifyProduct
+           ModifyProduct.passProduct(productTable.getSelectionModel().getSelectedItem());
 
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600);
-        String css = this.getClass().getResource("style.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setTitle("Add Part");
-        stage.setScene(scene);
-        stage.show();
+           //Load modify product scene
+           FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-product.fxml"));
+           Parent root = loader.load();
+
+           Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+           Scene scene = new Scene(root, 800, 600);
+           String css = this.getClass().getResource("style.css").toExternalForm();
+           scene.getStylesheets().add(css);
+           stage.setTitle("Add Part");
+           stage.setScene(scene);
+           stage.show();
+       }catch(Exception e) {
+           Alert alert = new Alert(Alert.AlertType.ERROR);
+           alert.setTitle("Uh oh!");
+           alert.setContentText("You must select a Product to modify.");
+           alert.showAndWait();
+       }
     }
 
-
+    /**
+     * This is the action event to switch scenes to the Modify Part view
+     * @param actionEvent for Modify Part button
+     * @throws IOException for an I/O error
+     */
     public void toModifyPart(ActionEvent actionEvent) throws IOException {
         //Parent root = FXMLLoader.load(getClass().getResource("modify-part.fxml"));
+        try {
+            //MODIFY PART PASS
+            //Get selected item in the table and send it to passPart method in ModifyPart controller.
+            ModifyPart.passPart(partTable.getSelectionModel().getSelectedItem());  // Get part and set to transfer part.
 
-        //MODIFY PART PASS
-        //Get selected item in the table and send it to passPart method in ModifyPart controller.
-        ModifyPart.passPart(partTable.getSelectionModel().getSelectedItem());  // Get part and set to transfer part.
 
+            //Loading ModifyPart scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-part.fxml"));
+            Parent root = loader.load();
 
-        //Loading ModifyPart scene
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-part.fxml"));
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root, 800,600);
-        String css = this.getClass().getResource("style.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setTitle("Modify Part");
-        stage.setScene(scene);
-        stage.show();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 800, 600);
+            String css = this.getClass().getResource("style.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            stage.setTitle("Modify Part");
+            stage.setScene(scene);
+            stage.show();
+        }catch(Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Uh oh!");
+            alert.setContentText("You must select a Part to modify.");
+            alert.showAndWait();
+        }
     }
 
+    /**
+     * This is the action event to delete a part. This includes an Alert warning before the user deletes the part.
+     * @param actionEvent for Delete Part button
+     */
     public void toDeletePart(ActionEvent actionEvent) {
         Alert partAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this part? This cannot be undone.");
         Optional<ButtonType> result = partAlert.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            deletePart(partTable.getSelectionModel().getSelectedItem());
+                Part part = partTable.getSelectionModel().getSelectedItem();
+                if (part != null) {
+                    deletePart(partTable.getSelectionModel().getSelectedItem());
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
+                    alert.setTitle("Uh oh!");
+                    alert.setContentText("Please select something to delete.");
+                    alert.showAndWait();
+                }
+
         }
 
+
     }
+
+    /**
+     * This method deletes a selected product.
+     * @param actionEvent for Delete Product button
+     */
     public void toDeleteProduct(ActionEvent actionEvent) {
 
         try{
@@ -129,7 +180,16 @@ public class MainController implements Initializable{
 
 
                 if(result.isPresent() && result.get() == ButtonType.OK) {
-                    deleteProduct(productTable.getSelectionModel().getSelectedItem());
+                    Product product = productTable.getSelectionModel().getSelectedItem();
+
+                    if (product != null) {
+                        deleteProduct(productTable.getSelectionModel().getSelectedItem());
+                    }else{
+                        Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
+                        alert.setTitle("Uh oh!");
+                        alert.setContentText("Please select something to delete.");
+                        alert.showAndWait();
+                    }
                 }
 
             }
@@ -137,30 +197,19 @@ public class MainController implements Initializable{
         } catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
             alert.setTitle("Uh oh!");
-            alert.setContentText("You cannot delete a Product with associated Parts. Remove Parts to delete Product.");
+            alert.setContentText("Pleae select a product to delete.");
             alert.showAndWait();
         }
 
 
-
-
-    }
-
-    private void addTestData() {
-        InHouse cool_part = new InHouse(10, "cool part", 10.00, 10, 1,20,101);
-        Inventory.addPart(cool_part);
-        OutSourced rad_part = new OutSourced(7, "rad part", 10.00, 10, 1,20,"Joes");
-        Inventory.addPart(rad_part);
-
-
-        Product nice_product= new Product(200,"nice product",400,20,1,40);
-        Inventory.addProduct(nice_product);
-        Product groovy_product = new Product(400,"groovy product",700,20,1,50);
-        Inventory.addProduct(nice_product);
-
     }
 
 
+    /**
+     * Set Table and colum values.
+     * @param url for future DB connection
+     * @param resourceBundle for resource location
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
        //addTestData();
@@ -183,7 +232,10 @@ public class MainController implements Initializable{
 
     //////// PART SEARCH ////////
 
-    // Results handler for Parts search field
+    /**
+     * Results handler for Parts search field
+     * @param actionEvent for part search
+     */
     public void getPartResults(ActionEvent actionEvent){
 
         //Receive user input
@@ -215,45 +267,12 @@ public class MainController implements Initializable{
 
     };
 
-//Delete below if it's never used
- /*   // Search by Part name
-    private ObservableList<Part>searchByPartName(String partialName){
-
-        //This is the collection for the result of the search
-        ObservableList<Part>partNames = FXCollections.observableArrayList();
-
-        //This list returns all parts in the inventory
-        ObservableList<Part>allParts = Inventory.getAllParts();
-
-        for(Part part : allParts){
-            if(part.getName().contains(partialName)){
-                partNames.add(part);
-            };
-        }
-
-        return partNames;
-
-
-    };
-
-    //Search by Part ID
-    private Part searchByPartId (int id){
-        ObservableList<Part>allParts = Inventory.getAllParts();
-
-        //For each part in our parts list, return the id if there is a match, else return null.
-        for (Part part : allParts) {
-            if (part.getId() == id) {
-                return part;
-            }
-        }
-
-        return null;
-    };*/
-
-
     ////////   PRODUCT SEARCH   ////////
 
-    //Results handler for the product search field
+    /**
+     * Results handler for the product search field
+     * @param actionEvent for product search
+     */
     public void getProductResults(ActionEvent actionEvent) {
         //Receive user input
         String query = productQuery.getText();
@@ -280,36 +299,5 @@ public class MainController implements Initializable{
         //Finally, add the parts list to the products table.
         productTable.setItems(products);
     }
-//Delete below if everything works
- /*   //Search by Product id
-    private Product searchByProductId(int id) {
-        ObservableList<Product>allProducts = Inventory.getAllProducts();
 
-        //For each part in our products list, return the id if there is a match, else return null.
-        for (Product product : allProducts) {
-            if (product.getId() == id) {
-                return product;
-            }
-        }
-
-        return null;
-    }
-
-    //Search by Product name
-    private ObservableList<Product> searchByProductName(String partialName) {
-        //This is the collection for the result of the search
-        ObservableList<Product>productNames = FXCollections.observableArrayList();
-
-        //This list returns all parts in the inventory
-        ObservableList<Product>allProducts = Inventory.getAllProducts();
-
-        for(Product product : allProducts){
-            if(product.getName().contains(partialName)){
-                productNames.add(product);
-            };
-        }
-
-        return productNames;
-
-    };*/
 }
