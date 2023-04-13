@@ -81,27 +81,27 @@ public class MainController implements Initializable{
      */
     public void toModifyProduct(ActionEvent actionEvent) throws IOException{
 
-       try {
-           //Grab transfer part from ModifyProduct
-           ModifyProduct.passProduct(productTable.getSelectionModel().getSelectedItem());
+        try {
+            //Grab transfer part from ModifyProduct
+            ModifyProduct.passProduct(productTable.getSelectionModel().getSelectedItem());
 
-           //Load modify product scene
-           FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-product.fxml"));
-           Parent root = loader.load();
+            //Load modify product scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("modify-product.fxml"));
+            Parent root = loader.load();
 
-           Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-           Scene scene = new Scene(root, 800, 600);
-           String css = this.getClass().getResource("style.css").toExternalForm();
-           scene.getStylesheets().add(css);
-           stage.setTitle("Add Part");
-           stage.setScene(scene);
-           stage.show();
-       }catch(Exception e) {
-           Alert alert = new Alert(Alert.AlertType.ERROR);
-           alert.setTitle("Uh oh!");
-           alert.setContentText("You must select a Product to modify.");
-           alert.showAndWait();
-       }
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 800, 600);
+            String css = this.getClass().getResource("style.css").toExternalForm();
+            scene.getStylesheets().add(css);
+            stage.setTitle("Add Part");
+            stage.setScene(scene);
+            stage.show();
+        }catch(Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Uh oh!");
+            alert.setContentText("You must select a Product to modify.");
+            alert.showAndWait();
+        }
     }
 
     /**
@@ -145,15 +145,15 @@ public class MainController implements Initializable{
         Optional<ButtonType> result = partAlert.showAndWait();
 
         if(result.isPresent() && result.get() == ButtonType.OK) {
-                Part part = partTable.getSelectionModel().getSelectedItem();
-                if (part != null) {
-                    deletePart(partTable.getSelectionModel().getSelectedItem());
-                }else{
-                    Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
-                    alert.setTitle("Uh oh!");
-                    alert.setContentText("Please select something to delete.");
-                    alert.showAndWait();
-                }
+            Part part = partTable.getSelectionModel().getSelectedItem();
+            if (part != null) {
+                deletePart(partTable.getSelectionModel().getSelectedItem());
+            }else{
+                Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
+                alert.setTitle("Uh oh!");
+                alert.setContentText("Please select something to delete.");
+                alert.showAndWait();
+            }
 
         }
 
@@ -172,7 +172,7 @@ public class MainController implements Initializable{
             testProduct = productTable.getSelectionModel().getSelectedItem();
             if(!testProduct.getAllAssociatedParts().isEmpty()){
 
-               throw new Exception("Cannot delete a Product with associated Parts.");
+                throw new Exception("Cannot delete a Product with associated Parts.");
             }
             else{
                 Alert productAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this product? It cannot be brought back");
@@ -212,7 +212,7 @@ public class MainController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-       //addTestData();
+        //addTestData();
 
 
         partId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -237,35 +237,51 @@ public class MainController implements Initializable{
      * @param actionEvent for part search
      */
     public void getPartResults(ActionEvent actionEvent){
-
         //Receive user input
         String query = partQuery.getText();
 
-        //Add query results to a list of parts
-        ObservableList<Part>parts = Inventory.lookupPart(query);
-
-        try {
-            //Instead, if an Id is used and the parts list is > 0, search by id and add to parts list.
-            if (parts.size() == 0) {
-
-                int id = Integer.parseInt(query);
-                Part part = Inventory.lookupPart(id);
-
-                if (part != null)
-                    parts.add(part);
-            }
-        }
-        catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR,"Something went wrong");
+        if(query.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
             alert.setTitle("Uh oh!");
             alert.setContentText("Please enter a valid Part ID or Name. Field cannot be blank.");
             alert.showAndWait();
+        }else {
+
+            try {
+                //Add query results to a list of parts
+                ObservableList<Part> parts = Inventory.lookupPart(query);
+
+                //Instead, if an Id is used and the parts list is = 0, search by id and add to parts list.
+                if (parts.size() == 0) {
+                    //Take the query and parse into an id.
+                    int id = Integer.parseInt(query);
+
+                    //Look up id and put into part
+                    Part part = Inventory.lookupPart(id);
+
+                    //If a part is found, add it to parts.
+                    if (part != null) {
+                        parts.add(part);
+                    }else { //If no part is found, throw alert
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                        alert.setTitle("Uh oh!");
+                        alert.setContentText("No matching ID found.");
+                        alert.showAndWait();
+                    }
+                }
+
+                //Finally, add the parts list to the parts table.
+                partTable.setItems(parts);
+
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                alert.setTitle("Uh oh!");
+                alert.setContentText("No matching name found.");
+                alert.showAndWait();
+            }
         }
 
-        //Finally, add the parts list to the parts table.
-        partTable.setItems(parts);
-
-    };
+    }
 
     ////////   PRODUCT SEARCH   ////////
 
@@ -280,20 +296,12 @@ public class MainController implements Initializable{
         //Add query results to a list of products
         ObservableList<Product>products = Inventory.lookupProduct(query);
 
-        try {
-            //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
-            if (products.size() == 0) {
-                int id = Integer.parseInt(query);
-                Product product = Inventory.lookupProduct(id);
-                if (product != null)
-                    products.add(product);
-            }
-        }
-        catch (NumberFormatException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR,"Something went wrong");
-            alert.setTitle("Uh oh!");
-            alert.setContentText("Please enter a valid Product ID or Name. Field cannot be blank.");
-            alert.showAndWait();
+        //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
+        if (products.size() == 0) {
+            int id = Integer.parseInt(query);
+            Product product = Inventory.lookupProduct(id);
+            if (product != null)
+                products.add(product);
         }
 
         //Finally, add the parts list to the products table.

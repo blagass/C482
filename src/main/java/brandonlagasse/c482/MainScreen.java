@@ -12,7 +12,6 @@ public class MainScreen extends Application {
      * The main class that sets the stage
      * @param stage for starting the app
      * @throws IOException for any IOExceptions
-     * FUTURE ENHANCEMENT: I would combine the functionality of both adding parts and products to the same screen. During testing, I found that having to make a prt first, then back out and into the Add Product screen was a lot of steps.
      */
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,6 +27,8 @@ public class MainScreen extends Application {
     /**
      * Calls the start method
      * @param args loads main args
+     * Javadoc folder location: C482-FINAL/javadoc.zip
+     * FUTURE ENHANCEMENT: I would combine the functionality of both adding parts and products to the same screen. During testing, I found that having to make a prt first, then back out and into the Add Product screen was a lot of steps.
      */
     public static void main(String[] args) {
         launch();
