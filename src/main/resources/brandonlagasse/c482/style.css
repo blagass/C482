@@ -1,9 +1,8 @@
 .root {
-    -fx-background-color: mintcream;
+    -fx-background-color: linear-gradient(to bottom,#ffffff,#61D8DE);
     -fx-border-color: lightskyblue;
     -fx-font-family: "Roboto Bold";
 }
-
 
 .button{
     -fx-background-color: lightcyan;
@@ -13,5 +12,4 @@
 .table-view{
     -fx-background-color: lightblue;
     -fx-font-family: "Roboto Light";
-
 }

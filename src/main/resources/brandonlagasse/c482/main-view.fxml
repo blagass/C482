@@ -92,6 +92,11 @@
                   <Insets right="20.0" />
                </StackPane.margin>
             </Button>
+            <Button fx:id="exitApp" layoutX="338.0" layoutY="66.0" mnemonicParsing="false" onAction="#toExitApp" text="Exit" textFill="#830f0f">
+               <StackPane.margin>
+                  <Insets left="200.0" top="80.0" />
+               </StackPane.margin>
+            </Button>
          </children>
       </StackPane>
    </children>

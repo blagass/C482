@@ -93,7 +93,7 @@
                            <children>
                               <StackPane prefHeight="91.0" prefWidth="315.0">
                                  <children>
-                                    <TextField fx:id="addProductSearch" prefWidth="206.0" promptText="Search by Part ID or Name">
+                                    <TextField fx:id="partQuery" onAction="#onAddProductSearch" prefWidth="206.0" promptText="Search by Part ID or Name">
                                        <StackPane.margin>
                                           <Insets left="120.0" right="20.0" />
                                        </StackPane.margin>
@@ -102,7 +102,7 @@
                               </StackPane>
                               <StackPane prefHeight="192.0" prefWidth="315.0">
                                  <children>
-                                    <TableView fx:id="partInventoryTable" prefHeight="200.0" prefWidth="315.0">
+                                    <TableView fx:id="partTable" prefHeight="200.0" prefWidth="315.0">
                                       <columns>
                                         <TableColumn fx:id="invPartIdCol" prefWidth="75.0" text="Part ID" />
                                         <TableColumn fx:id="invPartNameCol" prefWidth="75.0" text="Part Name" />

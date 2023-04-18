@@ -41,6 +41,7 @@ public class MainController implements Initializable{
     public TableColumn productCost;
     public TextField partQuery;
     public TextField productQuery;
+    public Button exitApp;
 
     /**
      * This is an action event to switch scenes to the Add Part view. This action also loads the common css file.
@@ -93,7 +94,7 @@ public class MainController implements Initializable{
             Scene scene = new Scene(root, 800, 600);
             String css = this.getClass().getResource("style.css").toExternalForm();
             scene.getStylesheets().add(css);
-            stage.setTitle("Add Part");
+            stage.setTitle("Modify Part");
             stage.setScene(scene);
             stage.show();
         }catch(Exception e) {
@@ -172,7 +173,7 @@ public class MainController implements Initializable{
             testProduct = productTable.getSelectionModel().getSelectedItem();
             if(!testProduct.getAllAssociatedParts().isEmpty()){
 
-                throw new Exception("Cannot delete a Product with associated Parts.");
+                throw new Exception("");
             }
             else{
                 Alert productAlert = new Alert(Alert.AlertType.CONFIRMATION,"Are you sure you want to delete this product? It cannot be brought back");
@@ -197,7 +198,7 @@ public class MainController implements Initializable{
         } catch (Exception e){
             Alert alert = new Alert(Alert.AlertType.WARNING,"Something went wrong");
             alert.setTitle("Uh oh!");
-            alert.setContentText("Pleae select a product to delete.");
+            alert.setContentText("Cannot delete a Product with associated Parts.");
             alert.showAndWait();
         }
 
@@ -293,19 +294,45 @@ public class MainController implements Initializable{
         //Receive user input
         String query = productQuery.getText();
 
-        //Add query results to a list of products
-        ObservableList<Product>products = Inventory.lookupProduct(query);
+        if(query.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("Please enter a valid Part ID or Name. Field cannot be blank.");
+            alert.showAndWait();
+        }else{
 
-        //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
-        if (products.size() == 0) {
-            int id = Integer.parseInt(query);
-            Product product = Inventory.lookupProduct(id);
-            if (product != null)
-                products.add(product);
+            try {
+                //Add query results to a list of products
+                ObservableList<Product> products = Inventory.lookupProduct(query);
+
+                //Instead, if an Id is used and the products list is > 0, search by id and add to products list.
+                if (products.size() == 0) {
+                    int id = Integer.parseInt(query);
+                    Product product = Inventory.lookupProduct(id);
+                    if (product != null) {
+                        products.add(product);
+                    }else { //If no part is found, throw alert
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                        alert.setTitle("Uh oh!");
+                        alert.setContentText("No matching ID found.");
+                        alert.showAndWait();
+                    }
+                }
+
+                //Finally, add the parts list to the products table.
+                productTable.setItems(products);
+            }catch(Exception e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                alert.setTitle("Uh oh!");
+                alert.setContentText("No matching name found.");
+                alert.showAndWait();
+            }
+
         }
-
-        //Finally, add the parts list to the products table.
-        productTable.setItems(products);
     }
 
+    public void toExitApp(ActionEvent actionEvent) {
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        stage.close();
+    }
 }

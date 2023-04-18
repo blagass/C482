@@ -24,15 +24,12 @@ import static brandonlagasse.c482.Inventory.getAllParts;
 public class AddProduct implements Initializable {
     public Part transferPart = null;
     public Product transferProduct;
-
     public TextField productIdField;
     public TextField productNameField;
     public TextField productStockField;
     public TextField productPriceField;
     public TextField productMaxField;
     public TextField productMinField;
-    public TextField addProductSearch;
-    public TableView partInventoryTable;
     public TableColumn invPartIdCol;
     public TableColumn invPartNameCol;
     public TableColumn invStockCol;
@@ -46,12 +43,14 @@ public class AddProduct implements Initializable {
     public Button removePartButton;
     public Button cancelAddButton;
     public Button saveProductButton;
+    public TableView partTable;
+    public TextField partQuery;
 
     /**
      * This event is fired when the Add Part button is clicked to transfer a Part from one table to another.
      */
     public void onAddPartButton() {
-        transferPart = (Part) partInventoryTable.getSelectionModel().getSelectedItem();
+        transferPart = (Part) partTable.getSelectionModel().getSelectedItem();
         transferProduct.addAssociatedPart(transferPart);
         productFinalTable.setItems(transferProduct.getAllAssociatedParts());
         //This needs to be redone to work with the missing functions from Product.java
@@ -185,7 +184,7 @@ public class AddProduct implements Initializable {
         finalPartStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         finalCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        partInventoryTable.setItems(allParts);
+        partTable.setItems(allParts);
 
         /////RANDOM ID GENERATOR
         Random randomId = new Random();
@@ -206,4 +205,50 @@ public class AddProduct implements Initializable {
     }
 
 
+    public void onAddProductSearch(ActionEvent actionEvent) {
+        ///Receive user input
+        String query = partQuery.getText();
+
+        if(query.isEmpty()){
+            partTable.setItems(allParts);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("Please enter a valid Part ID or Name. Field cannot be blank.");
+            alert.showAndWait();
+        }else {
+
+            try {
+                //Add query results to a list of parts
+                ObservableList<Part> parts = Inventory.lookupPart(query);
+
+                //Instead, if an Id is used and the parts list is = 0, search by id and add to parts list.
+                if (parts.size() == 0) {
+                    //Take the query and parse into an id.
+                    int id = Integer.parseInt(query);
+
+                    //Look up id and put into part
+                    Part part = Inventory.lookupPart(id);
+
+                    //If a part is found, add it to parts.
+                    if (part != null) {
+                        parts.add(part);
+                    }else { //If no part is found, throw alert
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                        alert.setTitle("Uh oh!");
+                        alert.setContentText("No matching ID found.");
+                        alert.showAndWait();
+                    }
+                }
+
+                //Finally, add the parts list to the parts table.
+                partTable.setItems(parts);
+
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                alert.setTitle("Uh oh!");
+                alert.setContentText("No matching name found.");
+                alert.showAndWait();
+            }
+        }
+    }
 }

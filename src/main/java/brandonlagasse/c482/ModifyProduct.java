@@ -22,6 +22,8 @@ import static brandonlagasse.c482.Inventory.getAllParts;
 
 public class ModifyProduct implements Initializable {
     private static Product transferProduct;
+    public TextField partQuery;
+    public TableView partTable;
     ObservableList<Part>finalPartList = FXCollections.observableArrayList();
 
     public int productIndex = Inventory.allProducts.indexOf(transferProduct);
@@ -78,76 +80,59 @@ public class ModifyProduct implements Initializable {
      * Search by part name method.
      */
     public void onPartQuery() {
-        //Receive user input
-        String query = partQueryField.getText();
+        ///Receive user input
+        String query = partQuery.getText();
 
-        //Add query results to a list of parts
-        ObservableList<Part>parts = searchByPartName(query);
+        if(query.isEmpty()){
+            partTable.setItems(allParts);
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+            alert.setTitle("Uh oh!");
+            alert.setContentText("Please enter a valid Part ID or Name. Field cannot be blank.");
+            alert.showAndWait();
+            partTable.setItems(allParts);
+        }else {
 
+            try {
+                //Add query results to a list of parts
+                ObservableList<Part> parts = Inventory.lookupPart(query);
 
-        //Instead, if an id is used and the parts list is > 0, search by id and add to parts list.
-        if(parts.size() == 0){
-            int id = Integer.parseInt(query);
-            Part part = searchByPartId(id);
-            if (part != null)
-                parts.add(part);
-        }
+                //Instead, if an Id is used and the parts list is = 0, search by id and add to parts list.
+                if (parts.size() == 0) {
+                    //Take the query and parse into an id.
+                    int id = Integer.parseInt(query);
 
-        //Finally, add the parts list to the parts table.
-        modPartTable.setItems(parts);
+                    //Look up id and put into part
+                    Part part = Inventory.lookupPart(id);
 
-    }
+                    //If a part is found, add it to parts.
+                    if (part != null) {
+                        parts.add(part);
+                    }else { //If no part is found, throw alert
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                        alert.setTitle("Uh oh!");
+                        alert.setContentText("No matching ID found.");
+                        alert.showAndWait();
+                    }
+                }
 
-    /**
-     * Search by Part Name method.
-     * @param partialName to be search for
-     * @return any matching parts
-     */
-    private ObservableList<Part>searchByPartName(String partialName){
+                //Finally, add the parts list to the parts table.
+                partTable.setItems(parts);
 
-        //This is the collection for the result of the search
-        ObservableList<Part>partNames = FXCollections.observableArrayList();
-
-        //This list returns all parts in the inventory
-        ObservableList<Part>allParts = Inventory.getAllParts();
-
-        for(Part part : allParts){
-            if(part.getName().contains(partialName)){
-                partNames.add(part);
-            };
-        }
-
-        return partNames;
-
-
-    };
-
-
-    /**
-     * This method searches by part id.
-     * @param id to be searched for
-     * @return any matching parts
-     */
-    private Part searchByPartId (int id){
-        ObservableList<Part>allParts = Inventory.getAllParts();
-
-        //For each part in our parts list, return the id if there is a match, else return null.
-        for (Part part : allParts) {
-            if (part.getId() == id) {
-                return part;
+            } catch (NumberFormatException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Something went wrong");
+                alert.setTitle("Uh oh!");
+                alert.setContentText("No matching name found.");
+                alert.showAndWait();
             }
         }
-
-        return null;
-    };
-    //PART SEARCH END////////////////////////////////
+    }
 
     /**
      * This method transfers the selected part from the parts table to the final parts table.
      */
     public void onPartAdd() {
 
-        transferProduct.addAssociatedPart((Part)modPartTable.getSelectionModel().getSelectedItem());
+        transferProduct.addAssociatedPart((Part)partTable.getSelectionModel().getSelectedItem());
         finalPartList = transferProduct.getAllAssociatedParts();
         modFinalPartTable.setItems(finalPartList);
 
@@ -286,7 +271,7 @@ public class ModifyProduct implements Initializable {
         finalPartStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         finalCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        modPartTable.setItems(allParts);
+        partTable.setItems(allParts);
         modFinalPartTable.setItems(transferProduct.getAllAssociatedParts());
 
         //Set fields to transferProduct attributes
